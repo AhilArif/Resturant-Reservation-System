@@ -1,0 +1,173 @@
+﻿@model IEnumerable<RestaurantManagement.Models.CartItem>
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoBackground.cshtml";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        color: #ffffff; 
+    }
+
+    .full-page-container {
+        min-height: 100vh; 
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        
+    }
+
+    h2 {
+        color: white; 
+        font-weight:bold;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #ddd; 
+    }
+
+    .thead-dark th {
+        background-color: #343a40; 
+        color: #fff; 
+    }
+
+    .btn-danger {
+        background-color: #dc3545; 
+        border-color: #dc3545; 
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333; 
+            border-color: #bd2130; 
+        }
+
+    .text-center {
+        text-align: center; 
+    }
+
+    .item-name {
+        color: #ffffff; 
+    }
+
+    .quantity {
+        text-align: center;
+        color: #ffffff; 
+    }
+
+    .quantity-input {
+        text-align: center; 
+        width: 50px; 
+        margin: 0 auto; 
+        color: #000000; 
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .action-buttons .btn {
+            margin-top: 5px;
+        }
+
+    .quantity-form {
+        display: none;
+    }
+
+    .table-container {
+        max-height: 60vh; 
+        overflow-y: auto; 
+    }
+</style>
+
+<div class="full-page-container">
+    <h2 class="text-center mb-4">Your Cart</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive table-container">
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="item-name">@item.MenuItem.Name</td> 
+                                        <td class="quantity">
+                                            <span class="quantity-text">@item.Quantity</span>
+                                            <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" class="quantity-form d-inline">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="number" name="quantity" value="@item.Quantity" min="1" class="quantity-input" style="display:none;" />
+                                            </form>
+                                        </td>
+                                        <td class="action-buttons">
+                                            <button type="button" class="btn btn-secondary btn-sm update-button">Update</button>
+                                            <form asp-controller="Cart" asp-action="RemoveFromCart" method="post">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-center">Your cart is empty.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.update-button').click(function () {
+                var $row = $(this).closest('tr');
+                var $quantityText = $row.find('.quantity-text');
+                var $quantityInput = $row.find('.quantity-input');
+                var isUpdating = $quantityInput.is(':visible');
+
+                if (isUpdating) {
+                    $row.find('.quantity-form').submit();
+                } else {
+                    $quantityText.hide();
+                    $quantityInput.show().focus();
+                    $(this).text('Save').removeClass('update-button btn-secondary').addClass('save-button btn-primary');
+                }
+
+                $(this).off('click').click(function () {
+                    $row.find('.quantity-form').submit();
+                });
+            });
+
+            $('.quantity-form').submit(function () {
+                var $row = $(this).closest('tr');
+                var $quantityInput = $row.find('.quantity-input');
+                var $quantityText = $row.find('.quantity-text');
+
+                $quantityText.text($quantityInput.val()).show();
+                $quantityInput.hide();
+                $row.find('.save-button').text('Update').removeClass('save-button btn-primary').addClass('update-button btn-secondary');
+
+                return true; 
+            });
+        });
+    </script>
+}

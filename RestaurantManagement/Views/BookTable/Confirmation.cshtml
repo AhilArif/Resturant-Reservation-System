@@ -1,0 +1,40 @@
+﻿@model RestaurantManagement.Models.Reservation
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoBackground.cshtml";
+}
+
+<style>
+    .confirmation-page {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+        .confirmation-page h2 {
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+
+        .confirmation-page p {
+            font-size: 1.1em;
+            color: #343a40;
+        }
+</style>
+
+<div class="confirmation-page">
+    <h2>Reservation Confirmation</h2>
+
+    <p>Name: @Model.CustomerName</p>
+    <p>Date: @Model.ReservationDate.ToShortDateString()</p>
+    <p>Number of Guests: @Model.NumberOfGuests</p>
+    @if (!string.IsNullOrEmpty(Model.SpecialRequests))
+    {
+        <p>Special Requests: @Model.SpecialRequests</p>
+    }
+    <p>Your table has been successfully reserved. We look forward to seeing you!</p>
+</div>

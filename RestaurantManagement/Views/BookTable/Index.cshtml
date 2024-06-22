@@ -1,0 +1,78 @@
+﻿@model RestaurantManagement.Models.Reservation
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoBackground.cshtml";
+}
+
+<style>
+    .reservation-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .reservation-form h2 {
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+
+    .form-group label {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .btn-primary {
+        background-color: #008080;
+        border-color: #008080;
+    }
+
+        .btn-primary:hover {
+            background-color: #005f5f;
+            border-color: #005f5f;
+        }
+
+    .text-danger {
+        font-size: 0.875em;
+    }
+</style>
+
+<div class="reservation-form">
+    <h2>Make a Reservation</h2>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p class="text-danger">@ViewBag.ErrorMessage</p>
+    }
+
+    <form asp-action="Reserve" method="post">
+        <div class="form-group">
+            <label asp-for="CustomerName">Name</label>
+            <input asp-for="CustomerName" class="form-control" />
+            <span asp-validation-for="CustomerName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ReservationDate">Date</label>
+            <input asp-for="ReservationDate" class="form-control" />
+            <span asp-validation-for="ReservationDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NumberOfGuests">Number of Guests</label>
+            <input asp-for="NumberOfGuests" class="form-control" />
+            <span asp-validation-for="NumberOfGuests" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SpecialRequests">Special Requests</label>
+            <textarea asp-for="SpecialRequests" class="form-control"></textarea>
+            <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

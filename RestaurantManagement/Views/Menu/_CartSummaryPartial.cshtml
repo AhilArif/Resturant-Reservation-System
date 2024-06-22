@@ -1,0 +1,14 @@
+﻿@model IEnumerable<RestaurantManagement.Models.CartItem>
+
+<div id="cart-summary">
+    <h3>Cart Summary</h3>
+    <ul class="list-group">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @item.MenuItem.Name
+                <span class="badge badge-primary badge-pill">@item.Quantity</span>
+            </li>
+        }
+    </ul>
+</div>

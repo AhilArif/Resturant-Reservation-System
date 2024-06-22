@@ -1,0 +1,59 @@
+﻿@model RestaurantManagement.Models.MenuViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoBackground.cshtml";
+}
+
+<h2>Menu</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="menu-container">
+            @foreach (var item in Model.MenuItems)
+            {
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Description</p>
+                        <p class="card-text">$@item.Price.ToString("F2")</p>
+                        <form asp-controller="Menu" asp-action="AddToCart" method="post" class="add-to-cart-form">
+                            <input type="hidden" name="menuItemId" value="@item.Id" />
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div id="cart-summary">
+            @{
+                await Html.RenderPartialAsync("_CartSummaryPartial", Model.CartItems);
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.add-to-cart-form').submit(function (event) {
+                event.preventDefault();
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (response) {
+                        $('#cart-summary').html($(response).html());
+                    },
+                    error: function () {
+                        alert('An error occurred while adding the item to the cart.');
+                    }
+                });
+            });
+        });
+    </script>
+}
